@@ -1,0 +1,23 @@
+{
+  "name": "sentence-builder-info",
+  "version": "1.0.0",
+  "description": "Backend for the sentence builder application",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/Njabz-1/sentence-builder-info.git"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/Njabz-1/sentence-builder-info/issues"
+  },
+  "homepage": "https://github.com/Njabz-1/sentence-builder-info#readme",
+  "dependencies": {
+    "express": "^4.18.2"
+  }
+}
