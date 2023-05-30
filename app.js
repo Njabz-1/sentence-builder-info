@@ -1,15 +1,37 @@
+require('dotenv').config();
+
 const express = require('express');
+const sql = require('mssql');
+
 const app = express();
-const port = 3000;
+const port = process.env.PORT || 3000;
+
+// Database configuration
+const dbConfig = {
+  user: process.env.DB_USER,
+  password: process.env.DB_PASSWORD,
+  server: process.env.DB_SERVER,
+  database: process.env.DB_NAME,
+  options: {
+    encrypt: true,
+    enableArithAbort: true
+  }
+};
+
+sql.connect(dbConfig, function (err) {
+  if (err) console.error(err);
+  console.log('Database connection established!');
+});
+
 
 app.get('/', (req, res) => {
   res.send('Hello World!');
 });
 
+const wordsRouter = require('./routes/words');
+
+app.use('/words', wordsRouter);
+
 app.listen(port, () => {
   console.log(`Server listening at http://localhost:${port}`);
 });
-
-
-
-
