@@ -29,8 +29,10 @@ app.get('/', (req, res) => {
 });
 
 const wordsRouter = require('./routes/words');
+const sentencesRouter = require('./routes/sentences');
 
 app.use('/words', wordsRouter);
+app.use('/sentences', sentencesRouter);
 
 app.listen(port, () => {
   console.log(`Server listening at http://localhost:${port}`);
