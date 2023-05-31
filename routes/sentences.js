@@ -1,3 +1,4 @@
+require('dotenv').config();
 const express = require('express');
 const router = express.Router();
 const sql = require('mssql');
@@ -16,7 +17,8 @@ router.post('/', async (req, res) => {
     try {
         const { sentence } = req.body; 
 
-        const insertQuery = `INSERT INTO Sentences (sentence, creation_date) VALUES (@sentence, GETDATE())`;
+        const tableName = process.env.NODE_ENV === 'test' ? 'TestSentences' : 'Sentences';
+        const insertQuery = `INSERT INTO ${tableName} (sentence, creation_date) VALUES (@sentence, GETDATE())`;
 
         let preparedStatement = new sql.PreparedStatement();
         preparedStatement.input('sentence', sql.NVarChar);

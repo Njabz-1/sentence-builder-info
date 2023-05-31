@@ -19,11 +19,13 @@ const dbConfig = {
   }
 };
 
-sql.connect(dbConfig, function (err) {
-  if (err) console.error(err);
-  console.log('Database connection established!');
+const sqlConnectPromise = new Promise((resolve, reject) => {
+  sql.connect(dbConfig, function (err) {
+    if (err) reject(err);
+    console.log('Database connection established!');
+    resolve();
+  });
 });
-
 
 app.get('/', (req, res) => {
   res.send('Hello World!');
@@ -35,6 +37,16 @@ const sentencesRouter = require('./routes/sentences');
 app.use('/words', wordsRouter);
 app.use('/sentences', sentencesRouter);
 
-app.listen(port, () => {
-  console.log(`Server listening at http://localhost:${port}`);
+const serverPromise = new Promise((resolve, reject) => {
+  const server = app.listen(port, () => {
+    console.log(`Server listening at http://localhost:${port}`);
+    resolve(server);
+  });
+  server.on('error', reject);
 });
+
+async function closeDatabaseConnection() {
+  await sql.close();
+}
+
+module.exports = { serverPromise, sqlConnectPromise, closeDatabaseConnection };

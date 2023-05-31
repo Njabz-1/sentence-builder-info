@@ -1,25 +1,43 @@
-const { server, closeDatabaseConnection } = require("../app");
+const {
+  serverPromise,
+  sqlConnectPromise,
+  closeDatabaseConnection,
+} = require("../app");
 const request = require("supertest");
-const app = server;
-const sql = require('mssql');
 
 describe("Sentences API", () => {
-    beforeAll(async () => {
-        // If server and sql.connect() do not return Promises, 
-        // you will need to refactor your app to make them do so
-        await server;
-        await sql.connect();
-      });
-    
-      afterAll(async () => {
-        await closeDatabaseConnection();
-      });
-  it("should save a sentence to the database", async () => {
-    const response = await request(app)
-      .post("/sentences")
-      .send({ sentence: "This is a test sentence" });
+  let server;
+  beforeAll(async () => {
+    server = await serverPromise;
+    await sqlConnectPromise;
+  });
 
-    expect(response.statusCode).toEqual(201);
+  afterAll(async () => {
+    server.close();
+    await closeDatabaseConnection();
+  });
+
+  it("should save a sentence to the database", async () => {
+    const response = await request(server)
+      .post("/sentences")
+      .send({ sentence: "This is a 2nd test sentence" });
+
+    expect(response.statusCode).toEqual(200);
     expect(response.body.message).toEqual("Sentence added successfully");
+  });
+
+  it("should get sentences from the database", async () => {
+    const response = await request(server).get("/sentences");
+
+    expect(response.statusCode).toEqual(200);
+    expect(response.body).toEqual(
+      expect.arrayContaining([
+        expect.objectContaining({
+          sentence_id: expect.any(Number),
+          sentence: expect.any(String),
+          creation_date: expect.any(String),
+        }),
+      ])
+    );
   });
 });

@@ -4,7 +4,7 @@
   "description": "Backend for the sentence builder application",
   "main": "index.js",
   "scripts": {
-    "test": "set NODE_ENV=test && jest"
+    "test": "set NODE_ENV=test && jest --runInBand"
   },
   "repository": {
     "type": "git",
